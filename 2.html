@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>了解中国传统文化</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #333;
+            padding: 10px 20px;
+            color: white;
+            flex-wrap: wrap;
+        }
+        .title {
+            font-size: 2em;
+            font-weight: bold;
+            margin: 0;
+            flex-grow: 1;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .nav-buttons a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background-color: transparent;
+            position: relative;
+            font-size: 1em;
+        }
+        .nav-buttons a.active,
+        .nav-buttons a:hover {
+            background-color: white;
+            color: black;
+        }
+        .content {
+            padding: 20px;
+            background-color: #f5f5dc;
+        }
+        .left-panel {
+            width: 250px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            height: calc(100vh - 80px); /* Adjust for header */
+            overflow-y: auto;
+            border-right: 2px solid #ddd;
+        }
+        .right-panel {
+            flex-grow: 1;
+            padding: 20px;
+            height: calc(100vh - 80px); /* Adjust for header */
+            overflow-y: auto;
+        }
+        .module {
+            padding: 10px;
+            background-color: #ddd;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .module:hover {
+            background-color: #ccc;
+        }
+        .submodule-list {
+            display: none;
+            padding-left: 20px;
+        }
+        .submodule {
+            padding: 8px;
+            background-color: #e3e3e3;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+        .submodule:hover {
+            background-color: #c7c7c7;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* New Contact Form Styles */
+        .contact-form {
+            margin-top: 20px;
+        }
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .contact-form textarea {
+            height: 150px;
+        }
+        .contact-form button {
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .contact-form button:hover {
+            background-color: #555;
+        }
+        /* Contact Info at the Bottom */
+        .contact-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            font-size: 0.8em;
+            color: #555;
+        }
+        .contact-info ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .contact-info li {
+            margin: 5px 0;
+        }
+        /* Modal (popup) style */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            overflow: auto;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* New Styles for Image Slider */
+        .image-slider {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            position: relative;
+            margin-top: 20px;
+        }
+        .slider-wrapper {
+            display: flex;
+            width: 300%; /* 3 images */
+            transition: transform 1s ease-in-out;
+        }
+        .slider-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+     
+        /* Style to make the image stretch and fit the bottom space of the page */
+        .home-image {
+            width: 100%;
+            height: 100vh; /* Takes the full height of the viewport */
+            object-fit: cover;
+            display: block;
+            position: absolute; /* Positioned absolute to stay behind text */
+            top: 0;
+            left: 0;
+        }
+
+        /* Style for text on top of the image */
+        .home-text {
+            position: absolute;
+            top: 1000%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 2em;
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            z-index: 1; /* Ensure text appears above the image */
+        }
+
+        /* Responsive design adjustments */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .title {
+                font-size: 2em;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+            }
+
+            .left-panel, .right-panel {
+                width: 100%;
+                height: auto;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+
+            .left-panel {
+                border-right: none;
+                border-bottom: 2px solid #ddd;
+            }
+
+            .image-slider {
+                height: 250px; /* Adjust height for smaller screens */
+            }
+
+            .home-text {
+                font-size: 1.5em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.8em;
+                text-align: center;
+            }
+
+            .nav-buttons a {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+
+            .contact-form input, .contact-form textarea {
+                font-size: 0.9em;
+            }
+
+            .home-text {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+<body>
+    <header>
+        <h1 class="title">Traditional Chinese culture</h1>
+        <div class="nav-buttons">
+            <a href="#" onclick="showPage('home')" id="navHome">HOME</a>
+            <a href="#" onclick="showPage('about')" id="navAbout">ABOUT</a>
+            <a href="#" onclick="showPage('learn')" id="navLearn">UNDERSTAND</a>
+            <a href="#" onclick="showPage('forum')" id="navForum">FORUM</a>
+            <a href="#" onclick="showPage('contact')" id="navContact">CONTACT</a>
+        </div>
+    </header>
+
+    <div id="mainContent">
+        <!-- home page -->
+        <div id="home" class="content" style="display: block; position: relative;">
+            <!-- home picture-->
+            <img src="https://ts1.cn.mm.bing.net/th/id/R-C.84ddf9c5229433ac67b17c665373eb7b?rik=p5IXc7PqF04M3Q&riu=http%3a%2f%2fimg.pconline.com.cn%2fimages%2fupload%2fupc%2ftx%2fphotoblog%2f1107%2f06%2fc5%2f8243441_8243441_1309931707234.jpg&ehk=wsGHPXsb%2bR7vn0wdGpGPtuSFr7cmr9WucjnfJsXzzQM%3d&risl=&pid=ImgRaw&r=0" alt="home picture" class="home-image">
+
+            <!-- Place the text content in the center of the image-->
+            <div class="home-text">
+                <h2>HOME</h2>
+                <p>Welcome to our Chinese traditional culture website! Explore rich cultural content and learn about China's traditional literature, art, festivals, cuisine, and other exciting content.</p>
+            </div>
+        </div>
+
+
+        <!-- about -->
+<div id="about" class="content" style="display: none;">
+    <h2></h2>
+    
+    <!-- introduce -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h3 style="font-size: 3em; font-weight: bold;">ABOUT</h3>
+        <p style="font-size: 1.5em; margin: 0;">Chinese traditional culture refers to the cultural traditions and customs formed during the thousands of years of historical development in China. It includes rich philosophical ideas, moral concepts, religious beliefs, art forms, etiquette systems, customs and habits, and other aspects. It is a manifestation of the Chinese national spirit and an important foundation for cultural confidence and identity of the Chinese nation.</p>
+    </div>
+
+   
+    <div>
+        <p style="font-size: 1.5em;">The following are some of the main aspects of traditional Chinese culture: philosophical thinking, moral ethics, religious beliefs, literature and art, festival customs, etiquette systems, traditional medicine, architecture, clothing, food culture, etc. Chinese traditional culture not only has a profound impact on the values and lifestyle of Chinese people, but also has made important contributions to the diversity of world culture and the development of human civilization. With the development of the times, traditional Chinese culture is constantly integrating with modern culture, forming new forms of cultural expression.</p>
+    </div>
+
+    <!-- picture -->
+    <div style="display: flex; justify-content: space-between; margin-top: 30px;">
+        <div style="flex: 1; padding: 0 10px;">
+            <img src="https://x0.ifengimg.com/res/2020/915A388A02D91A7FD2AC67BD4A813F9BA0618F25_size375_w1200_h800.jpeg" alt="picture1" class="hover-img" style="width: 100%; border-radius: 8px;">
+        </div>
+        <div style="flex: 1; padding: 0 10px;">
+            <img src="https://e0.ifengimg.com/07/2019/0206/4B3E56C3C115D2D9F2EA9CA5E791E3BF1C78B2D6_size81_w1080_h635.jpeg" alt="picture2" class="hover-img" style="width: 100%; border-radius: 8px;">
+        </div>
+        <div style="flex: 1; padding: 0 10px;">
+            <img src="https://pic3.zhimg.com/v2-081dbe9476c18838c8dcf0d64704e6f3_720w.jpg?source=172ae18b" alt="picture3" class="hover-img" style="width: 100%; border-radius: 8px;">
+        </div>
+    </div>
+</div>
+
+<!-- Image hover effect-->
+<style>
+    /* Mouse hover effect, only applicable to images with class="hover img"*/
+    .hover-img:hover {
+        transform: scale(1.05); /* amplification effect */
+        transition: transform 0.3s; /* Smooth transition */
+    }
+</style>
+
+
+        <!-- fourm -->
+<div id="forum" class="content" style="display: none;">
+    <h2>论坛</h2>
+    
+    <!-- Randomly generated forum content -->
+    <div id="forumPosts" style="margin-bottom: 20px;">
+        <!-- The forum content will be displayed here -->
+    </div>
+
+    <!-- Input box and publish button -->
+    <div>
+        <textarea id="forumInput" placeholder="Enter your forum content..." style="width: 100%; height: 350px; padding: 10px;"></textarea>
+        <input type="file" id="forumFile" style="margin-top: 10px; margin-right: 10px;">
+        <button onclick="publishPost()" style="padding: 10px 20px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">发布</button>
+    </div>
+</div>
+
+<script>
+    // Randomly generate forum content
+    const forumData = [
+        { name: "Bob", content: "Chinese traditional festivals, especially the Spring Festival, carry profound cultural and historical backgrounds and are important moments for reuniting with family." },
+        { name: "Jack", content: "China's tea culture has a history of thousands of years, and every cup of tea contains rich cultural meanings." },
+        { name: "Allen", content: "Calligraphy is one of the traditional arts in China, containing profound philosophical and aesthetic ideas." },
+        { name: "Blaine", content: "Chinese traditional costumes, such as cheongsam and hanfu, show the Chinese people's pursuit of beauty and cultural heritage." }
+    ];
+
+    // Randomly select 4 forum contents
+    function generateForumPosts() {
+        const forumPostsDiv = document.getElementById('forumPosts');
+        forumPostsDiv.innerHTML = '';  // Clear existing content
+
+
+        // Randomly select 4 forum contents
+        const selectedPosts = [];
+        while (selectedPosts.length < 4) {
+            const randomIndex = Math.floor(Math.random() * forumData.length);
+            const post = forumData[randomIndex];
+            if (!selectedPosts.includes(post)) {
+                selectedPosts.push(post);
+            }
+        }
+
+        // Display forum content
+        selectedPosts.forEach(post => {
+            const postDiv = document.createElement('div');
+            postDiv.style.marginBottom = '20px';
+            postDiv.innerHTML = `<strong>${post.name}：</strong><p>${post.content}</p>`;
+            forumPostsDiv.appendChild(postDiv);
+        });
+    }
+
+    // Publish forum content
+    function publishPost() {
+        const forumInput = document.getElementById('forumInput').value;
+        const forumFile = document.getElementById('forumFile').files[0];
+
+        if (forumInput.trim() === "") {
+            alert("Please enter the forum content!");
+            return;
+        }
+
+        // Display newly published forum content
+        const forumPostsDiv = document.getElementById('forumPosts');
+        const newPostDiv = document.createElement('div');
+        newPostDiv.style.marginBottom = '20px';
+        newPostDiv.innerHTML = `<strong>me：</strong><p>${forumInput}</p>`;
+        forumPostsDiv.prepend(newPostDiv);
+
+        // Clear input box
+        document.getElementById('forumInput').value = '';
+        document.getElementById('forumFile').value = '';  // Clear the file input box
+    }
+
+    // Generate forum content during page loading
+    document.addEventListener("DOMContentLoaded", function () {
+        generateForumPosts();
+    });
+</script>
+
+
+        <!-- cintact-->
+        <div id="contact" class="content" style="display: none;">
+            <h2>Contact Us</h2>
+            <p>Please contact us through the following form:</p>
+
+            <!-- Contact Form -->
+            <div class="contact-form">
+                <h3>Fill in your information</h3>
+                <form id="contactForm">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Please enter your name" required>
+
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" placeholder="Please enter your email address" required>
+
+                    <label for="phone">Mobile:</label>
+                    <input type="text" id="phone" name="phone" placeholder="Please enter your phone number" required>
+
+                    <label for="suggestion">Suggest:</label>
+                    <textarea id="suggestion" name="suggestion" placeholder="Please input your suggestion" required></textarea>
+
+                    <button type="submit">submit</button>
+                </form>
+            </div>
+
+            <!-- Contact Info at the Bottom -->
+            <div class="contact-info">
+                <h3>contact information</h3>
+                <ul>
+                    <li>E-mail: 111111@culture.cn</li>
+                    <li>Phone:+86 123-4567-89</li>
+                    <li>Address: XXXXXXX100</li>
+                </ul>
+            </div>
+        </div>
+
+<!-- Understand the module -->
+<div id="learn" class="content" style="display: none; height: calc(100vh - 80px); padding: 120px; background-color: #FFE4C4;">
+    <!-- 第一排 -->
+    <div style="display: flex; justify-content: center; gap: 45px; margin-bottom: 20px;margin-top: -70px;">
+        <div class="card" style="width: 450px; height: 300px; border: 1px solid #ccc; border-radius: 10px; overflow: hidden; position: relative;">
+            <img src="https://ts1.cn.mm.bing.net/th/id/R-C.09786616d05999cc743df5c499999e56?rik=%2bllKeoje78IQGg&riu=http%3a%2f%2fn.sinaimg.cn%2ftranslate%2fw500h506%2f20180110%2f-Q5P-fyqnick0888529.jpg&ehk=uBI95XcQFTjUCcBZyzHBBbTkDgq3HKvu1agg3AQsIT8%3d&risl=&pid=ImgRaw&r=0" style="width: 100%; height: 70%; object-fit: cover;">
+            <div style="padding: 10px; text-align: center; font-size: 14px;">Chinese philosophical thought: Represented by Confucianism, Taoism, Legalism, Mohism, and other ancient Chinese philosophical ideas, it has had a profound impact on Chinese culture.</div>
+            <button onmouseover="showTooltip(event, 'Chinese philosophical thought has a long history, mainly consisting of Confucianism, Taoism, Legalism, Mohism, and others. Confucianism emphasizes benevolence, righteousness, propriety, wisdom, and trustworthiness, advocating for harmonious interpersonal relationships; Taoism advocates following nature and promoting the rule of inaction; Legalists emphasize the rule of law and authority; Mohism advocates for both love and non aggression. These ideas have influenced the politics, society, and culture of China for thousands of years.')" onmouseout="hideTooltip()" style="position: absolute; left: 10px; bottom: 10px; padding: 5px 10px; font-size: 12px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">details</button>
+        </div>
+        <div class="card" style="width: 450px; height: 300px; border: 1px solid #ccc; border-radius: 10px; overflow: hidden; position: relative;">
+            <img src="https://ts1.cn.mm.bing.net/th/id/R-C.8f9fc39ee7241ccb159f3e959a4d4423?rik=4kP5b9Rp%2fe3KSA&riu=http%3a%2f%2fwww.gufengjia.com%2fd%2ffile%2fimages%2f201906300056%2f31-1P511201326-50.jpg&ehk=DTHKPGTViPXFzWRso%2bvGTADSZZURkj5%2f6yaU33u%2fnzY%3d&risl=&pid=ImgRaw&r=0" style="width: 100%; height: 70%; object-fit: cover;">
+            <div style="padding: 10px; text-align: center; font-size: 14px;">Traditional Chinese clothing, such as Hanfu and Tang costumes, reflects the social, cultural, and aesthetic concepts of different historical periods.</div>
+            <button onmouseover="showTooltip(event, 'There are many types of traditional Chinese clothing, each with its own characteristics. Hanfu, characterized by its wide robe, large sleeves, crossed collar, and right lapel, embodies the aesthetic of ancient Chinese clothing; The Manchu qipao is known for its close fitting cut and elegant lines. The costumes of various ethnic groups, such as Tibetan robes and Mongolian robes, also have their own characteristics, reflecting the cultural features of different regions and ethnic groups.')" onmouseout="hideTooltip()" style="position: absolute; left: 10px; bottom: 10px; padding: 5px 10px; font-size: 12px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">details</button>
+        </div>
+        <div class="card" style="width: 450px; height: 300px; border: 1px solid #ccc; border-radius: 10px; overflow: hidden; position: relative;">
+            <img src="https://tse3-mm.cn.bing.net/th/id/OIP-C.WOo_3pC1UzJu4HVh2Yz3ZgHaE8?rs=1&pid=ImgDetMain" style="width: 100%; height: 70%; object-fit: cover;">
+            <div style="padding: 10px; text-align: center; font-size: 14px;">Traditional Chinese architecture: Ancient Chinese buildings such as palaces, temples, gardens, etc. embody unique aesthetics and philosophical ideas.</div>
+            <button onmouseover="showTooltip(event, 'Traditional Chinese architecture is mainly based on wooden structures, emphasizing symmetry and hierarchy, and emphasizing harmony with nature. Typical buildings such as the Forbidden City and the Temple of Heaven are renowned for their grandeur, magnificence, and intricate craftsmanship. Garden architecture, such as Suzhou gardens, showcases the beauty of nature through its small and exquisite design and the use of borrowed scenery.')" onmouseout="hideTooltip()" style="position: absolute; left: 10px; bottom: 10px; padding: 5px 10px; font-size: 12px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">details</button>
+        </div>
+    </div>
+    
+    <!-- 第二排 -->
+    <div style="display: flex; justify-content: center; gap: 45px; margin-bottom: 20px;">
+        <div class="card" style="width: 450px; height: 300px; border: 1px solid #ccc; border-radius: 10px; overflow: hidden; position: relative;">
+            <img src="https://photo-static-api.fotomore.com/creative/vcg/veer/nowarter800/new/VCG41N518585870.jpg" style="width: 100%; height: 70%; object-fit: cover;">
+            <div style="padding: 10px; text-align: center; font-size: 14px;">Chinese medicine, such as traditional Chinese medicine, emphasizes the balance of yin and yang and the holistic concept.</div>
+            <button onmouseover="showTooltip(event, 'Chinese medicine, also known as traditional Chinese medicine, has a history of thousands of years and emphasizes holistic concepts and the balance of yin and yang. TCM treatment methods include Chinese medicine, acupuncture and moxibustion, massage, etc., focusing on prevention and conditioning, and pursuing the overall health of body and mind.')" onmouseout="hideTooltip()" style="position: absolute; left: 10px; bottom: 10px; padding: 5px 10px; font-size: 12px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">details</button>
+        </div>
+        
+        <div class="card" style="width: 450px; height: 300px; border: 1px solid #ccc; border-radius: 10px; overflow: hidden; position: relative;">
+            <img src="https://img2.jiemian.com/101/original/20190218/155049638819499800.jpg" style="width: 100%; height: 70%; object-fit: cover;">
+            <div style="padding: 10px; text-align: center; font-size: 14px;">Chinese traditional festivals: such as the Spring Festival, Mid-Autumn Festival, Loong Boat Festival, Tomb Sweeping Day, etc., each festival has its own specific way of celebration and cultural significance.</div>
+            <button onmouseover="showTooltip(event, 'Chinese traditional festivals, such as the Spring Festival, the Mid-Autumn Festival, and the Loong Boat Festival, carry rich cultural connotations and historical legends. These festivals are usually related to the themes of sacrifice, reunion, and commemoration, and are celebrated through specific customs and ceremonies, such as eating Zongzi, watching the moon, and setting off firecrackers.')" onmouseout="hideTooltip()" style="position: absolute; left: 10px; bottom: 10px; padding: 5px 10px; font-size: 12px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">details</button>
+        </div>
+        
+        <div class="card" style="width: 450px; height: 300px; border: 1px solid #ccc; border-radius: 10px; overflow: hidden; position: relative;">
+            <img src="https://ts1.cn.mm.bing.net/th/id/R-C.ab23f9623ba7860b0f8a2dc839fad0c7?rik=S3C06BnuweditA&riu=http%3a%2f%2fwlt.hubei.gov.cn%2fhbsfwzwhycw%2fwszt%2fctxj%2f202005%2fW020200519431426549049.jpg&ehk=%2fX6p8O2t6n%2fvHHjEs13%2bGbx3LMM7K45Mu%2bO%2b3%2fj5%2fiI%3d&risl=&pid=ImgRaw&r=0" style="width: 100%; height: 70%; object-fit: cover;">
+            <div style="padding: 10px; text-align: center; font-size: 14px;">Chinese traditional art: Chinese literature and art have a long history, including various forms such as poetry, prose, novels, drama, painting, calligraphy, music, dance, etc.</div>
+            <button onmouseover="showTooltip(event, 'Chinese traditional art forms are diverse, such as calligraphy, painting, opera, Paper Cuttings, etc. These art forms not only showcase superb skills, but also contain profound philosophical ideas and aesthetic tastes, such as the flowing clouds and waters of calligraphy and the profound artistic conception of painting.')" onmouseout="hideTooltip()" style="position: absolute; left: 10px; bottom: 10px; padding: 5px 10px; font-size: 12px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">details</button>
+        </div>
+    </div>
+
+    <!-- 第三排 -->
+    <div style="display: flex; justify-content: center; gap: 45px;">
+        <div class="card" style="width: 450px; height: 300px; border: 1px solid #ccc; border-radius: 10px; overflow: hidden; position: relative;">
+        <img src="https://tse2-mm.cn.bing.net/th/id/OIP-C.U4JUd6rQH7DUqZJmhFGFkgHaE8?rs=1&pid=ImgDetMain" style="width: 100%; height: 70%; object-fit: cover;">
+        <div style="padding: 10px; text-align: center; font-size: 14px;">Religious belief: including Buddhism, Taoism, Confucianism, etc. These religions and philosophical thoughts influence each other and together form the Chinese world outlook and outlook on life.</div>
+        <button onmouseover="showTooltip(event, 'China has diverse religious beliefs, including Taoism, Buddhism, Confucianism, Islam, and Christianity. These religions have influenced each other in Chinese history and together constitute the diversity of Chinese religious culture.')" onmouseout="hideTooltip()" style="position: absolute; left: 10px; bottom: 10px; padding: 5px 10px; font-size: 12px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">details</button>
+    </div>
+    
+    <div class="card" style="width: 450px; height: 300px; border: 1px solid #ccc; border-radius: 10px; overflow: hidden; position: relative;">
+        <img src="https://img.hbhcdn.com/dmp/s/merchant/1562601600/jh-img-orig-ga_1148418621212598272_600_400_398230.jpg" style="width: 100%; height: 70%; object-fit: cover;">
+        <div style="padding: 10px; text-align: center; font-size: 14px;">Etiquette: The ancient etiquette system strictly regulated people's behavior, such as weddings, funerals, sacrifices, etc.</div>
+        <button onmouseover="showTooltip(event, 'China is a country of etiquette and has a profound culture of etiquette. From the ancient "Five Rites" to the modern social etiquette, Chinese people pay attention to politeness and respect, such as respecting the old and loving the young, polite language, etc., which reflects the harmony and order of Chinese society.')" onmouseout="hideTooltip()" style="position: absolute; left: 10px; bottom: 10px; padding: 5px 10px; font-size: 12px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">details</button>
+    </div>
+
+    <div class="card" style="width: 450px; height: 300px; border: 1px solid #ccc; border-radius: 10px; overflow: hidden; position: relative;">
+        <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.C5c47ZPLJCPM6FQvHk7vlQHaGK?rs=1&pid=ImgDetMain" style="width: 100%; height: 70%; object-fit: cover;">
+        <div style="padding: 10px; text-align: center; font-size: 14px;">Food culture: Chinese food culture is rich and diverse, with distinctive dishes and dietary habits in different regions.</div>
+        <button onmouseover="showTooltip(event, 'The Chinese culinary culture is vast and profound, represented by the "Eight Great Cuisines", each with its own characteristics. Chinese cuisine stresses color, fragrance, taste and shape, pays attention to the freshness of ingredients and cooking skills, and also emphasizes the relationship between diet and health, such as Tonic Diet.')" onmouseout="hideTooltip()" style="position: absolute; left: 10px; bottom: 10px; padding: 5px 10px; font-size: 12px; background-color: #333; color: white; border: none; border-radius: 5px; cursor: pointer;">details</button>
+    </div>
+</div>
+
+<!-- Tooltip for card details -->
+<div id="tooltip" style="position: absolute; background-color: rgba(0, 0, 0, 0.7); color: white; padding: 20px 30px; border-radius: 5px; font-size: 14px; display: none; max-width: 300px; word-wrap: break-word;">
+    <!-- Tooltip content will be dynamically added in JavaScript-->
+</div>
+
+<!-- Add hover effect style -->
+<style>
+    .card:hover {
+        transform: translateY(-10px); /* When hovering over the mouse, the card floats upwards */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Add shadow effect */
+    }
+</style>
+
+<script>
+    function showTooltip(event, text) {
+        var tooltip = document.getElementById("tooltip");
+        tooltip.style.display = "block";
+        
+        // Get the coordinates of the button
+        var button = event.target;
+        var buttonRect = button.getBoundingClientRect();
+        
+        // Set an offset to control the horizontal movement of the tooltip
+        var horizontalOffset = 50; // You can adjust the distance of the left and right offset here (unit: px)              
+        
+        // Calculate the top left corner position of the tooltip to make it horizontally offset
+        tooltip.style.left = buttonRect.left + buttonRect.width / 2 - tooltip.offsetWidth / 2 + horizontalOffset + "px"; // Tooltip horizontal offset
+        tooltip.style.top = buttonRect.top - tooltip.offsetHeight - 10 + "px"; // Tooltip displayed above the button
+        tooltip.innerText = text;
+    }
+
+    function hideTooltip() {
+        var tooltip = document.getElementById("tooltip");
+        tooltip.style.display = "none";
+    }
+</script>
+
+    <!-- Modal for Submission Success -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p>You have successfully submitted, please wait for our feedback.</p>
+        </div>
+    </div>
+
+    <script>
+        // Display the specified page and hide other pages
+
+        function showPage(page) {
+            document.querySelectorAll('.content').forEach(content => {
+                content.style.display = 'none';
+            });
+            document.querySelectorAll('.nav-buttons a').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById(page).style.display = 'block';
+            document.getElementById(`nav${page.charAt(0).toUpperCase() + page.slice(1)}`).classList.add('active');
+        }
+
+        // Default display homepage
+
+        document.addEventListener("DOMContentLoaded", function () {
+            showPage('home');
+        });
+
+        // Process form submission
+        document.getElementById('contactForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent form refresh
+            showModal(); // Display successful pop-up window
+        });
+
+        // Display pop-up window
+        function showModal() {
+            document.getElementById('successModal').style.display = 'block';
+        }
+
+        // Close the pop-up window
+        function closeModal() {
+            document.getElementById('successModal').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
